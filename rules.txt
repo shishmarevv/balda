@@ -1,0 +1,7 @@
+Two players take turns.
+Each adds one letter.
+If after adding a letter an existing word is obtained or the current combination of letters cannot be used to make a word, the player loses.
+
+Два игрока ходят по-очереди. 
+Каждый добавляет по одной букве. 
+Если после добавления буквы получилось существующее слово или из текущей комбинации букв слово никак не получить, то игрок проигрывает.
