@@ -1,4 +1,4 @@
-import os, threading
+import os, random, time
 
 def outFile():
     file = open("C:/Users/Nergigante/Documents/Projects/Balda/memory.txt", 'r')
@@ -11,10 +11,10 @@ def outFile():
 
 def inFile(dict):
     file = open("C:/Users/Nergigante/Documents/Projects/Balda/memory.txt", 'w')
-    str = ''
-    for key, value in dict:
-        str = str + key + ':' + str(value) + '\n'
-    file.write(str)
+    buffer = ''
+    for key in dict.keys():
+        buffer = buffer + key + ':' + str(dict[key]) + '\n'
+    file.write(buffer)
     file.close()
 
 def check(words, input_word):
@@ -66,22 +66,52 @@ def playerVSplayer(words):
             checker = False
             playerVSplayer(words)
 
-def AIthread(words, iterations):
-    global dict
-
-
 def aiVSai(words):
-    print("AI vs AI")
-    iterations = int(input("Type in a number of iterations "))
-    thread_number = int(input("Type a number of threads "))
-    thread_list = []
-    for i in range(thread_number):
-        thread_list.append(threading.Thread(target = AIthread(words, iterations//thread_number)))
-    for thread in thread_list:
-        thread.start()
-    for thread in thread_list:
-        thread.join()
-    
+    global dict
+    timer = time.time()
+    os.system('cls')
+    print("AI versus AI")
+    iterations = int(input("Type the number of iterations:"))
+    for i in range(iterations):
+        buffer = chr(97 + random.randint(0, 25))
+        if not (buffer in dict.keys()):
+            dict[buffer] = 0
+        checker = True
+        iterator = 1
+        cash = []
+        while checker:
+            cash.append(buffer)
+            switch = check(words, buffer)
+            if switch == 2:
+                dict[buffer] = dict[buffer] + iterator
+                weight = 0
+                temp = True
+                for key in dict.keys():
+                    if buffer in key and (len(buffer) + 1 == len(key)):
+                        temp = False
+                        if dict[key] > weight:
+                            weight = dict[key]
+                if temp:
+                    buffer = buffer + chr(97 + random.randint(0, 25))
+                else:
+                    temp = []
+                    for key in dict.keys():
+                        if abs(dict[key] - weight) <= 3*iterator:
+                            temp.append(key)
+                    buffer = buffer + temp[random.randint(0, len(temp) - 1)]
+                if not (buffer in dict.keys()):
+                    dict[buffer] = 0
+            else:
+                checker = False
+                for key in cash:
+                    dict[key] = dict[key] - 1
+            iterator = iterator + 1
+        if (i/iterations*100)%10 == 0:
+            print("Current progress:" + str(i/iterations*100) + "%")
+    print("It took " + str(time.time() - timer) + " seconds")
+    stop = input("If you want to come back to main menu type m: ")  
+    if stop == 'm':
+        main(words)
     
 def main(words):
     os.system('cls')
@@ -93,6 +123,9 @@ def main(words):
         if i == '1':
             checker = False
             playerVSplayer(words)
+        elif i == '3':
+            checker = False
+            aiVSai(words)
         elif i =='5':
             checker = False
 
