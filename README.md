@@ -8,3 +8,5 @@
 0.1 - added the ability to play two people. Started working on adding AI VS AI mode.
 
 0.2 - added the AI vs AI mode.
+
+0.3 - changed AI algorithm.

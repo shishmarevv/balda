@@ -21,9 +21,8 @@ def check(words, input_word):
     button = 0
     input_word.replace('\n', '')
     for word in words:
-        if input_word in word:
-            if not(input_word == word):
-                button = 2
+        if (word[:len(input_word)] == input_word) and not(input_word == word):
+            button = 2
         if input_word == word:
             button = 1
             break
@@ -61,7 +60,6 @@ def playerVSplayer(words):
         m = input()
         if m == 'm':
             checker = False
-            main(words)
         elif m == 'r':
             checker = False
             playerVSplayer(words)
@@ -87,7 +85,7 @@ def aiVSai(words):
                 weight = 0
                 temp = True
                 for key in dict.keys():
-                    if buffer in key and (len(buffer) + 1 == len(key)):
+                    if (len(buffer) + 1 == len(key)) and (key[:len(buffer)] == buffer):
                         temp = False
                         if dict[key] > weight:
                             weight = dict[key]
@@ -96,7 +94,7 @@ def aiVSai(words):
                 else:
                     temp = []
                     for key in dict.keys():
-                        if abs(dict[key] - weight) <= 3*iterator:
+                        if abs(dict[key] - weight) <= iterator:
                             temp.append(key)
                     buffer = buffer + temp[random.randint(0, len(temp) - 1)]
                 if not (buffer in dict.keys()):
@@ -109,23 +107,43 @@ def aiVSai(words):
         if (i/iterations*100)%10 == 0:
             print("Current progress:" + str(i/iterations*100) + "%")
     print("It took " + str(time.time() - timer) + " seconds")
-    stop = input("If you want to come back to main menu type m: ")  
-    if stop == 'm':
-        main(words)
-    
-def main(words):
-    os.system('cls')
-    print("MAIN MENU")
-    print("TYPE 1 IF YOU WANT PLAYER VS PLAYER \nTYPE 2 IF YOU WANT PLAYER VS AI \nTYPE 3 IF YOU WANT AI VS AI\nTYPE 4 TO SEE RULES\nTYPE 5 TO EXIT")
     checker = True
+    print("Come back to main menu typing m\nType r to restart")
     while checker:
-        i = input()
-        if i == '1':
+        answer= input()
+        if answer == 'm':
             checker = False
-            playerVSplayer(words)
-        elif i == '3':
+        elif answer == 'r':
             checker = False
             aiVSai(words)
+
+def rules():
+    file = open("C:/Users/Nergigante/Documents/Projects/Balda/rules.txt", 'r')
+    print(file.read())
+    file.close()
+
+def correctMemory():
+    global dict
+    temp = []
+    for key in dict.keys():
+        if dict[key] < 0:
+            temp.append(key)
+    for key in temp:
+        del dict[key]
+
+def main(words):
+    checker = True
+    while checker:
+        os.system('cls')
+        print("MAIN MENU")
+        print("TYPE 1 IF YOU WANT PLAYER VS PLAYER \nTYPE 2 IF YOU WANT PLAYER VS AI \nTYPE 3 IF YOU WANT AI VS AI\nTYPE 4 TO SEE RULES\nTYPE 5 TO EXIT")
+        i = input()
+        if i == '1':
+            playerVSplayer(words)
+        elif i == '3':
+            aiVSai(words)
+        elif i == '4':
+            rules()
         elif i =='5':
             checker = False
 
@@ -138,4 +156,10 @@ for line in WordsFile:
 WordsFile.close()
 dict = outFile()
 main(words)
+correctMemory()
 inFile(dict)
+
+#TODO: Add a Player versus AI mode
+#TODO: Create a GUI
+#FIXME: AI is not working properly, need to create a new learning algorithm. Maybe change thew ay AI is being rewarded
+#FIXME: Add comments to the code
